@@ -67,8 +67,36 @@ public abstract class Document {
 		// TODO: Implement this method so that you can call it from the 
 	    // getNumSyllables method in BasicDocument (module 2) and 
 	    // EfficientDocument (module 3).
-	    return 0;
-	}
+		char []word_array = (word.toLowerCase()).toCharArray();
+		int lastIndex = word_array.length -1;
+		int syllables = 0;
+		char preChar;
+		char c = 7;
+		
+		for (int i = 0; i < word_array.length; i++) {
+			preChar = c;
+			c = word_array[i];
+			
+			if (preChar == 'u' || preChar == 'e' || preChar== 'o'|| preChar == 'a'|| preChar == 'i' || preChar == 'y')
+			{
+                continue;
+			}
+			if (c == 'u' || c == 'e' || c== 'o'|| c == 'a'|| c == 'i' || c == 'y') {
+				if (i == lastIndex && c == 'e' && syllables == 0) {
+					syllables ++;
+					}
+				else if ( i == lastIndex && c == 'e') {
+					return syllables;
+				}
+				
+				else {
+					syllables += 1;
+				}
+				}
+			}
+			return syllables;
+		}
+		
 	
 	/** A method for testing
 	 * 
@@ -132,7 +160,8 @@ public abstract class Document {
 	{
 	    // TODO: You will play with this method in week 1, and 
 		// then implement it in week 2
-	    return text.length();
+        double words = getNumWords();
+	    return 206.835 - 1.015 * (words/getNumSentences()) - 84.6*(getNumSyllables()/words) ;
 	}
 	
 	

@@ -38,10 +38,13 @@ public class AutoCompleteDictionaryTrieTester {
 		smallDict.addWord("help");
 		smallDict.addWord("he");
 		smallDict.addWord("hem");
-		smallDict.addWord("hot");
+    	smallDict.addWord("hot");
+    	
 		smallDict.addWord("hey");
+		
 		smallDict.addWord("a");
-		smallDict.addWord("subsequent");
+    	smallDict.addWord("subsequent");
+    	smallDict.printTree();
 		
 		DictionaryLoader.loadDictionary(largeDict, dictFile);
 	}
