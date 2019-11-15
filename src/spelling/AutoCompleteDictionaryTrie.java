@@ -20,6 +20,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     public AutoCompleteDictionaryTrie()
 	{
 		root = new TrieNode();
+		size = 0;
 	}
 	
 	
@@ -50,13 +51,18 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 			
 			if (next.getChild(wordArr[i]) == null) {
 				next = next.insert(wordArr[i]);
-				isAdded = true;
 			}
 			else {
 				next = next.getChild(wordArr[i]);
 			}
 		}
-		next.setEndsWord(true);
+		// update number of words in the trie
+		if (!next.endsWord()) {
+			size++;
+			next.setEndsWord(true);
+			isAdded = true;
+		}
+		
 		return isAdded;
 	}
 	
@@ -67,7 +73,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
@@ -76,21 +82,25 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
+		if (s.isEmpty()) {
+			return false;
+		}
 	    // TODO: Implement this method
 		char [] wordArr = s.toLowerCase().toCharArray();
 		TrieNode next = root;
 		for (int i =0; i < wordArr.length; i++) {
-			
 			
 			if (next.getChild(wordArr[i]) == null) {
 				return false;
 			}
 			else {
 				next = next.getChild(wordArr[i]);	
-			}
-				
+			}	
 		}
-		return true;
+		if (next.endsWord())
+			return true;
+		
+		return false;
 	}
 
 	/** 
@@ -131,7 +141,36 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
     	 
-         return null;
+    	 char [] wordArr = prefix.toLowerCase().toCharArray();
+ 		 TrieNode next = root;
+ 		 LinkedList<TrieNode> queueWords = new LinkedList<TrieNode>();
+ 		 LinkedList<String> completionList = new LinkedList<String>();
+ 		 for (int i =0; i < wordArr.length; i++) {
+ 			
+ 			if (next.getChild(wordArr[i]) == null) {
+ 				return completionList;
+ 			}
+ 			else {
+ 				next = next.getChild(wordArr[i]);	
+ 			}
+ 		 }
+ 		 queueWords.addLast(next);
+ 		 
+ 		 while (!queueWords.isEmpty() && completionList.size() < numCompletions) {
+ 			 TrieNode current = queueWords.removeFirst();
+ 			 if (current.endsWord())
+ 				completionList.add(current.getText());
+ 			 
+ 			 TrieNode nextChild = null;
+ 			 for (char c : current.getValidNextCharacters()) {
+ 				 nextChild = current.getChild(c);
+ 				 queueWords.addLast(nextChild);
+ 			 }
+ 		 }
+ 		 
+    	 
+    	 
+         return completionList;
      }
 
  	// For debugging
